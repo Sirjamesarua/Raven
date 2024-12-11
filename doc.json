@@ -1,0 +1,229 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Raven",
+        "version": "1.0.0",
+        "description": "API documentation for the Raven application"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000/api"
+        }
+    ],
+    "paths": {
+        "/accounts/create": {
+            "post": {
+                "summary": "Create a new bank account",
+                "tags": [
+                    "Account"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Account created successfully"
+                    },
+                    "500": {
+                        "description": "Failed to create account"
+                    }
+                }
+            }
+        },
+        "/accounts/{user_id}": {
+            "get": {
+                "summary": "Fetch accounts for a user",
+                "tags": [
+                    "Account"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "ID of the user"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of user accounts"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            }
+        },
+        "/auth/signup": {
+            "post": {
+                "summary": "Register a new user",
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully"
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "summary": "Log in a user",
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "james@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful"
+                    },
+                    "400": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/transactions/send": {
+            "post": {
+                "summary": "Send money to another account",
+                "tags": [
+                    "Transaction"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "amount",
+                                    "bankCode",
+                                    "accountNumber",
+                                    "narration"
+                                ],
+                                "properties": {
+                                    "amount": {
+                                        "type": "number",
+                                        "description": "Amount to send"
+                                    },
+                                    "bankCode": {
+                                        "type": "string",
+                                        "description": "Bank code of the recipient"
+                                    },
+                                    "accountNumber": {
+                                        "type": "string",
+                                        "description": "Recipient's account number"
+                                    },
+                                    "narration": {
+                                        "type": "string",
+                                        "description": "Transaction description"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Transfer successful"
+                    },
+                    "500": {
+                        "description": "Transfer failed"
+                    }
+                }
+            }
+        },
+        "/webhook/status": {
+            "post": {
+                "summary": "Handle webhook updates",
+                "tags": [
+                    "Webhook"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": [
+                                    "transactionId",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "transactionId": {
+                                        "type": "string",
+                                        "description": "ID of the transaction"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "description": "New status of the transaction"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Webhook processed"
+                    },
+                    "500": {
+                        "description": "Failed to process webhook"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "User": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "example": "james"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "james@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "password"
+                    }
+                }
+            }
+        }
+    },
+    "tags": []
+}

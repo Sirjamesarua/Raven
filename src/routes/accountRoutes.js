@@ -5,7 +5,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /account/create:
+ * /accounts/create:
  *   post:
  *     summary: Create a new bank account
  *     tags: [Account]
@@ -19,7 +19,7 @@ router.post('/create', createAccount);
 
 /**
  * @swagger
- * /account/{user_id}:
+ * /accounts/{user_id}:
  *   get:
  *     summary: Fetch accounts for a user
  *     tags: [Account]

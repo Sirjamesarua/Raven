@@ -10,12 +10,18 @@ const router = express.Router();
  *     User:
  *       type: object
  *       properties:
- *         username: 
+ *         first_name: 
  *           type: string
- *           example: "james"
+ *           example: "James"
+ *         last_name: 
+ *           type: string
+ *           example: "Arua"
+ *         phone: 
+ *           type: string
+ *           example: "08140480701"
  *         email: 
  *           type: string
- *           example: "james@example.com"
+ *           example: "james@gmail.com"
  *         password:
  *           type: string
  *           example: "password"

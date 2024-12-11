@@ -1,29 +1,63 @@
 const knex = require('knex')(require('../../knexfile').development);
 const axios = require('axios');
+const { check, validationResult } = require('express-validator');
 
 exports.createAccount = async (req, res) => {
-  try {
-    const { user_id, first_name, last_name, phone, email } = req.body;
-
-    const response = await axios.post('https://integrations.getravenbank.com/v1/pwbt/generate_account', {
-      first_name,
-      last_name,
-      phone,
-      email,
-      amount: '1000',
-    });
-
-    const account = await knex('accounts').insert({
-      user_id,
-      account_number: response.data.account_number,
-      balance: 0,
-    }).returning('*');
-
-    res.status(201).json({ message: 'Account created successfully', account });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+    try {
+        await check('first_name', 'First name is required').notEmpty().run(req);
+        await check('last_name', 'Last name is required').notEmpty().run(req);
+        await check('phone', 'Phone number is required')
+          .notEmpty()
+          .matches(/^\+?[1-9]\d{1,14}$/)
+          .withMessage('Phone number must be in valid E.164 format')
+          .run(req);
+        await check('email', 'Valid email is required').isEmail().run(req);
+    
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const formattedErrors = errors.array().map(err => ({
+                message: err.msg, 
+                field: err.param
+            }));
+            return res.status(400).json({ errors: formattedErrors });
+        }
+  
+      const user_id = req.user.id;
+  
+      if (!user_id) {
+        return res.status(400).json({ error: 'User ID not found. Please log in again.' });
+      }
+  
+      const { first_name, last_name, phone, email } = req.body;
+  
+      if (!process.env.RAVEN_API_URL) {
+        return res.status(500).json({ error: 'Raven API URL is not configured in .env' });
+      }
+  
+      const response = await axios.post(`${process.env.RAVEN_API_URL}/generate_account`, {
+        first_name,
+        last_name,
+        phone,
+        email,
+        amount: '1000',
+      });
+  
+      if (!response.data || !response.data.account_number) {
+        return res.status(500).json({ error: 'Failed to generate account from Raven API' });
+      }
+  
+      const [account] = await knex('accounts').insert({
+        user_id,
+        account_number: response.data.account_number,
+        balance: 0, 
+      }).returning('*');
+  
+      res.status(201).json({ message: 'Account created successfully', account });
+  
+    } catch (error) { 
+      res.status(500).json({ error: error.message });
+    }
+  };
 
 
 exports.fetchAccounts = async (req, res) => {
