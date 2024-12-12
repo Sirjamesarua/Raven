@@ -17,39 +17,50 @@
                 "tags": [
                     "Account"
                 ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "James"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Arua"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "james@gmail.com.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": 8140480701
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "Account created successfully"
-                    },
-                    "500": {
-                        "description": "Failed to create account"
                     }
                 }
             }
         },
-        "/accounts/{user_id}": {
+        "/accounts": {
             "get": {
                 "summary": "Fetch accounts for a user",
                 "tags": [
                     "Account"
                 ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "user_id",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        },
-                        "description": "ID of the user"
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "List of user accounts"
-                    },
-                    "404": {
-                        "description": "User not found"
                     }
                 }
             }
@@ -92,7 +103,7 @@
                                 "properties": {
                                     "email": {
                                         "type": "string",
-                                        "example": "james@example.com"
+                                        "example": "james@gmail.com"
                                     },
                                     "password": {
                                         "type": "string",
@@ -106,9 +117,6 @@
                 "responses": {
                     "200": {
                         "description": "Login successful"
-                    },
-                    "400": {
-                        "description": "Invalid credentials"
                     }
                 }
             }
@@ -127,26 +135,42 @@
                                 "type": "object",
                                 "required": [
                                     "amount",
-                                    "bankCode",
-                                    "accountNumber",
-                                    "narration"
+                                    "recipient_bank_code",
+                                    "recipient_account_number",
+                                    "narration",
+                                    "recipient_account_name",
+                                    "recipient_bank"
                                 ],
                                 "properties": {
                                     "amount": {
                                         "type": "number",
-                                        "description": "Amount to send"
+                                        "description": "Amount to send",
+                                        "example": 100
                                     },
-                                    "bankCode": {
+                                    "recipient_bank_code": {
                                         "type": "string",
-                                        "description": "Bank code of the recipient"
+                                        "description": "Bank code of the recipient",
+                                        "example": "044"
                                     },
-                                    "accountNumber": {
+                                    "recipient_bank": {
                                         "type": "string",
-                                        "description": "Recipient's account number"
+                                        "description": "Bank Name of the recipient",
+                                        "example": "BestStar MFB"
+                                    },
+                                    "recipient_account_number": {
+                                        "type": "string",
+                                        "description": "Recipient's account number",
+                                        "example": "6000173564"
+                                    },
+                                    "recipient_account_name": {
+                                        "type": "string",
+                                        "description": "Recipient Account Name",
+                                        "example": "BST/TestLtd - James Arua"
                                     },
                                     "narration": {
                                         "type": "string",
-                                        "description": "Transaction description"
+                                        "description": "Transaction description",
+                                        "example": "My account narration"
                                     }
                                 }
                             }
@@ -156,9 +180,19 @@
                 "responses": {
                     "200": {
                         "description": "Transfer successful"
-                    },
-                    "500": {
-                        "description": "Transfer failed"
+                    }
+                }
+            }
+        },
+        "/transactions": {
+            "get": {
+                "summary": "Fetch transactions",
+                "tags": [
+                    "Account"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transactions"
                     }
                 }
             }
@@ -196,9 +230,6 @@
                 "responses": {
                     "200": {
                         "description": "Webhook processed"
-                    },
-                    "500": {
-                        "description": "Failed to process webhook"
                     }
                 }
             }
@@ -209,13 +240,21 @@
             "User": {
                 "type": "object",
                 "properties": {
-                    "username": {
+                    "first_name": {
                         "type": "string",
-                        "example": "james"
+                        "example": "James"
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "example": "Arua"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "08140480701"
                     },
                     "email": {
                         "type": "string",
-                        "example": "james@example.com"
+                        "example": "james@gmail.com"
                     },
                     "password": {
                         "type": "string",
