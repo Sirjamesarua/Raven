@@ -9,6 +9,25 @@ const router = express.Router();
  *   post:
  *     summary: Create a new bank account
  *     tags: [Account]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               first_name:
+ *                 type: string
+ *                 example: "James"  
+ *               last_name:
+ *                 type: string
+ *                 example: "Arua"  
+ *               email:
+ *                 type: string
+ *                 example: "james@gmail.com.com"  
+ *               phone:
+ *                 type: string
+ *                 example: 08140480701 
  *     responses:
  *       201:
  *         description: Account created successfully

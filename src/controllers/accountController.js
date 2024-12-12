@@ -39,20 +39,36 @@ exports.createAccount = async (req, res) => {
         last_name,
         phone,
         email,
-        amount: '1000',
+        amount: '0',
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${process.env.RAVEN_API_KEY}`
+        },
       });
+      
+
+      console.log('james>>>>',response);
+      
   
-      if (!response.data || !response.data.account_number) {
+      if (!response.data || !response.data.data.account_number) {
         return res.status(500).json({ error: 'Failed to generate account from Raven API' });
       }
   
-      const [account] = await knex('accounts').insert({
+      const accountId = await knex('accounts').insert({
         user_id,
-        account_number: response.data.account_number,
-        balance: 0, 
-      }).returning('*');
+        account_number: response.data.data.account_number,
+        account_name: response.data.data.account_name,
+        bank: response.data.data.bank,
+        balance: response.data.data.amount, 
+      }).returning('id');
+
+
+      const account = await knex('accounts').select('*').where({ id: accountId[0] });
+
+      res.status(201).json({ message: 'Account created successfully', account: account[0] });
   
-      res.status(201).json({ message: 'Account created successfully', account });
+    //   res.status(201).json({ message: 'Account created successfully', account });
   
     } catch (error) { 
       res.status(500).json({ error: error.message });
