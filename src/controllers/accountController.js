@@ -34,7 +34,7 @@ exports.createAccount = async (req, res) => {
         return res.status(500).json({ error: 'Raven API URL is not configured in .env' });
       }
   
-      const response = await axios.post(`${process.env.RAVEN_API_URL}/generate_account`, {
+      const response = await axios.post(`${process.env.RAVEN_API_URL}/pwbt/generate_account`, {
         first_name,
         last_name,
         phone,

@@ -1,5 +1,5 @@
 const express = require('express');
-const { sendMoney } = require('../controllers/transactionController');
+const { sendMoney, getTransactions } = require('../controllers/transactionController');
 
 const router = express.Router();
 
@@ -17,22 +17,36 @@ const router = express.Router();
  *             type: object
  *             required:
  *               - amount
- *               - bankCode
- *               - accountNumber
+ *               - recipient_bank_code
+ *               - recipient_account_number
  *               - narration
+ *               - recipient_account_name
+ *               - recipient_bank
  *             properties:
  *               amount:
  *                 type: number
  *                 description: Amount to send
- *               bankCode:
+ *                 example: 100
+ *               recipient_bank_code:
  *                 type: string
  *                 description: Bank code of the recipient
- *               accountNumber:
+ *                 example: "044"
+ *               recipient_bank:
+ *                 type: string
+ *                 description: Bank Name of the recipient
+ *                 example: "BestStar MFB"
+ *               recipient_account_number:
  *                 type: string
  *                 description: Recipient's account number
+ *                 example: "6000173564"
+ *               recipient_account_name:
+ *                 type: string
+ *                 description: Recipient Account Name
+ *                 example: "BST/TestLtd - James Arua"
  *               narration:
  *                 type: string
  *                 description: Transaction description
+ *                 example: "My account narration"
  *     responses:
  *       200:
  *         description: Transfer successful
@@ -40,5 +54,20 @@ const router = express.Router();
  *         description: Transfer failed
  */
 router.post('/send', sendMoney);
+
+
+/**
+ * @swagger
+ * /transactions:
+ *   get:
+ *     summary: Fetch transactions
+ *     tags: [Account]
+ *     responses:
+ *       200:
+ *         description: Transactions
+ *       404:
+ *         description: not found
+ */
+router.get('/', getTransactions);
 
 module.exports = router;
