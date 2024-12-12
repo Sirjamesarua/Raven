@@ -38,23 +38,16 @@ router.post('/create', createAccount);
 
 /**
  * @swagger
- * /accounts/{user_id}:
+ * /accounts:
  *   get:
  *     summary: Fetch accounts for a user
  *     tags: [Account]
- *     parameters:
- *       - in: path
- *         name: user_id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID of the user
  *     responses:
  *       200:
  *         description: List of user accounts
  *       404:
  *         description: User not found
  */
-router.get('/:user_id', fetchAccounts);
+router.get('/', fetchAccounts);
 
 module.exports = router;

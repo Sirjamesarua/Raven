@@ -78,7 +78,7 @@ exports.createAccount = async (req, res) => {
 
 exports.fetchAccounts = async (req, res) => {
     try {
-      const { user_id } = req.params;
+        const user_id = req.user.id;
   
       const accounts = await knex('accounts').where({ user_id });
       res.status(200).json({ accounts });
